@@ -6,7 +6,7 @@ import './App.css'
 import Navbar from './Navbar'
 import Main from './Main'
 import { ethers } from "ethers";
-//const web3 = require('web3');
+const web3 = window.ethereum
 
 function toWei(eth) {
   return eth * 1000000000000000000
@@ -17,6 +17,7 @@ function fromWei(eth) {
 } 
 
 const provider = new ethers.providers.Web3Provider(window.ethereum)
+const signer = provider.getSigner()
 class App extends Component {
 
   async componentWillMount() {
@@ -40,7 +41,7 @@ class App extends Component {
 
     if(tokenData) {
         const contractAddress = tokenData.address
-        const token = new ethers.Contract(contractAddress, Token.abi, provider)
+        const token = new ethers.Contract(contractAddress, Token.abi, signer)
         let tokenBalance = await token.balanceOf(this.state.account)
         let tokenBalance_s = tokenBalance.toString()
         this.setState({tokenBalance_s})
@@ -52,8 +53,8 @@ class App extends Component {
     const ethSwapData = EthSwap.networks[network.chainId]
 
     if(ethSwapData) {
-        const ethSwapAddress = tokenData.address
-        const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, provider)
+        const ethSwapAddress = ethSwapData.address
+        const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, signer)
         this.setState({ethSwap})
       }   
     else {
@@ -61,13 +62,8 @@ class App extends Component {
     }
 
     //Buy tokens
-    buyTokens = (etherAmount) => {
-        this.state.ethSwap.address
-        token.transferFrom
-    }
     
     //Sell tokens
-    sellTokens = 
 
     this.setState({loading: false})
   }
@@ -94,6 +90,16 @@ class App extends Component {
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
     }
   }
+
+  
+  async buyTokens(etherAmount) {
+    const network = await provider.getNetwork();
+    const ethSwapData = EthSwap.networks[network.chainId]
+    const ethSwapAddress = ethSwapData.address
+    const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, signer)
+    const tx = await ethSwap.buyTokens()
+    await tx.wait()
+      }
 
   constructor(props) {
     super(props)

@@ -24,7 +24,7 @@ class SellForm extends Component {
         <div>
           <label className="float-left"><b>Input</b></label>
           <span className="float-right text-muted">
-            Balance: {window.web3.utils.fromWei(10000000, 'Ether')}
+            Balance: {fromWei(this.props.tokenBalance)}
           </span>
         </div>
         <div className="input-group mb-4">
@@ -50,7 +50,7 @@ class SellForm extends Component {
         <div>
           <label className="float-left"><b>Output</b></label>
           <span className="float-right text-muted">
-            Balance: {window.web3.utils.fromWei(222222222, 'Ether')}
+            Balance: {fromWei(this.props.ethbalance)}
           </span>
         </div>
         <div className="input-group mb-2">
