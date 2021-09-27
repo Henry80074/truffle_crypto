@@ -18,7 +18,7 @@ class BuyForm extends Component {
           event.preventDefault()
           let etherAmount
           etherAmount = this.input.value.toString()
-          etherAmount = toWei(etherAmount) 
+          etherAmount = etherAmount //from wei, to wei or nothing??
           this.props.buyTokens(etherAmount)
         }}>
         <div>

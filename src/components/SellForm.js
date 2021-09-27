@@ -3,7 +3,7 @@ import tokenLogo from '../token-logo.png'
 import ethLogo from '../eth-logo.png'
 import {toWei} from './App'; 
 import {fromWei} from './App'
-
+import { ethers } from "ethers";
 class SellForm extends Component {
   constructor(props) {
     super(props)
@@ -18,7 +18,7 @@ class SellForm extends Component {
           event.preventDefault()
           let etherAmount
           etherAmount = this.input.value.toString()
-          etherAmount = toWei(etherAmount)
+          etherAmount = ethers.utils.parseUnits(etherAmount, 'ether')
           this.props.sellTokens(etherAmount)
         }}>
         <div>

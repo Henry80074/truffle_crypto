@@ -44,7 +44,8 @@ class App extends Component {
         const token = new ethers.Contract(contractAddress, Token.abi, signer)
         let tokenBalance = await token.balanceOf(this.state.account)
         let tokenBalance_s = tokenBalance.toString()
-        this.setState({tokenBalance_s})
+        this.setState({tokenBalance: tokenBalance_s})
+        this.setState({ token })
       }   
     else {
       window.alert('token contract not deployed to connected network')
@@ -90,16 +91,9 @@ class App extends Component {
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
     }
   }
-
+ 
   
-  async buyTokens(etherAmount) {
-    const network = await provider.getNetwork();
-    const ethSwapData = EthSwap.networks[network.chainId]
-    const ethSwapAddress = ethSwapData.address
-    const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, signer)
-    const tx = await ethSwap.buyTokens()
-    await tx.wait()
-      }
+  
 
   constructor(props) {
     super(props)
@@ -112,6 +106,34 @@ class App extends Component {
       loading: true
     }
   }
+  async buyTokens(etherAmount) {
+    //let overrides = { value: etherAmount, from: '0xbb25098cba9db77c834bc817d3f9fb0d2c19d63c'}
+    console.log(etherAmount)
+    const network = await provider.getNetwork();
+    const ethSwapData = EthSwap.networks[network.chainId]
+    const ethSwapAddress = ethSwapData.address
+    const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, signer)
+    const tx = await ethSwap.buyTokens({ value: ethers.utils.parseEther(etherAmount)})
+    await tx.wait()
+    console.log(tx)
+      }
+
+  async sellTokens(tokenAmount) {
+    //let overrides = { value: etherAmount, from: '0xbb25098cba9db77c834bc817d3f9fb0d2c19d63c'}
+    console.log(tokenAmount)
+    const network = await provider.getNetwork();
+    const tokenData = Token.networks[network.chainId]
+    const contractAddress = tokenData.address
+    const token = new ethers.Contract(contractAddress, Token.abi, signer)
+    const ethSwapData = EthSwap.networks[network.chainId]
+    const ethSwapAddress = ethSwapData.address
+    const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, signer)
+    await token.approve(ethSwapAddress, tokenAmount)
+    const tx1 = await ethSwap.sellTokens(tokenAmount)
+    //console.log(typeof(v), v);
+    await tx1.wait()
+    console.log(tx1)
+      }
 
   render() {
     let content
