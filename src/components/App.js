@@ -108,12 +108,12 @@ class App extends Component {
   }
   async buyTokens(etherAmount) {
     //let overrides = { value: etherAmount, from: '0xbb25098cba9db77c834bc817d3f9fb0d2c19d63c'}
-    console.log(etherAmount)
-    const network = await provider.getNetwork();
-    const ethSwapData = EthSwap.networks[network.chainId]
-    const ethSwapAddress = ethSwapData.address
-    const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, signer)
-    const tx = await ethSwap.buyTokens({ value: ethers.utils.parseEther(etherAmount)})
+    //console.log(etherAmount)
+    //const network = await provider.getNetwork();
+    //const ethSwapData = EthSwap.networks[network.chainId]
+    //const ethSwapAddress = ethSwapData.address
+    //const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, signer)
+    const tx = await this.state.ethSwap.buyTokens({ value: ethers.utils.parseEther(etherAmount)})
     await tx.wait()
     console.log(tx)
       }
