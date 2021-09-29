@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import tokenLogo from '../token-logo.png'
 import ethLogo from '../eth-logo.png'
-import {toWei} from './App'; 
 import {fromWei} from './App'
 import { ethers } from "ethers";
 class SellForm extends Component {

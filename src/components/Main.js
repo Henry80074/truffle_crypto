@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import BuyForm from './BuyForm'
 import SellForm from './SellForm'
-import {toWei} from './App'; 
-import {fromWei} from './App'
+
 
 class Main extends Component {
   constructor(props) {

@@ -6,7 +6,6 @@ import './App.css'
 import Navbar from './Navbar'
 import Main from './Main'
 import { ethers } from "ethers";
-const web3 = window.ethereum
 
 function toWei(eth) {
   return eth * 1000000000000000000
@@ -19,6 +18,20 @@ function fromWei(eth) {
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 const signer = provider.getSigner()
 class App extends Component {
+
+   constructor(props) {
+    super(props)
+    this.state = {
+      account: '',
+      ethbalance: '0',
+      token: {},
+      tokenBalance: '0',
+      ethSwap: {},
+      loading: true
+    }
+    this.buyTokens = this.buyTokens.bind(this);
+    this.sellTokens = this.sellTokens.bind(this);
+  }
 
   async componentWillMount() {
     await this.loadWeb3()
@@ -91,45 +104,19 @@ class App extends Component {
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
     }
   }
- 
-  
-  
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      account: '',
-      ethbalance: '0',
-      token: {},
-      tokenBalance: '0',
-      ethSwap: {},
-      loading: true
-    }
-  }
+  // consider how to write these functiojns wityhout async promise.then()....
   async buyTokens(etherAmount) {
-    //let overrides = { value: etherAmount, from: '0xbb25098cba9db77c834bc817d3f9fb0d2c19d63c'}
-    //console.log(etherAmount)
-    //const network = await provider.getNetwork();
-    //const ethSwapData = EthSwap.networks[network.chainId]
-    //const ethSwapAddress = ethSwapData.address
-    //const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, signer)
-    const tx = await this.state.ethSwap.buyTokens({ value: ethers.utils.parseEther(etherAmount)})
+
+    const tx = await this.state.ethSwap.buyTokens({ value: ethers.utils.parseEther(etherAmount)}) //global scope??
     await tx.wait()
     console.log(tx)
       }
 
   async sellTokens(tokenAmount) {
-    //let overrides = { value: etherAmount, from: '0xbb25098cba9db77c834bc817d3f9fb0d2c19d63c'}
-    console.log(tokenAmount)
-    const network = await provider.getNetwork();
-    const tokenData = Token.networks[network.chainId]
-    const contractAddress = tokenData.address
-    const token = new ethers.Contract(contractAddress, Token.abi, signer)
-    const ethSwapData = EthSwap.networks[network.chainId]
-    const ethSwapAddress = ethSwapData.address
-    const ethSwap = new ethers.Contract(ethSwapAddress, EthSwap.abi, signer)
-    await token.approve(ethSwapAddress, tokenAmount)
-    const tx1 = await ethSwap.sellTokens(tokenAmount)
+
+    await this.state.token.approve(this.state.ethSwap.address, tokenAmount)
+    const tx1 = await this.state.ethSwap.sellTokens(tokenAmount)
     //console.log(typeof(v), v);
     await tx1.wait()
     console.log(tx1)
